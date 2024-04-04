@@ -1,0 +1,9 @@
+[book]
+authors = ["Qirui WANG"]
+language = "ja"
+multilingual = false
+src = "book"
+title = "好きな言語にLSPを"
+
+[build]
+build-dir = "output"
