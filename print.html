@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html lang="ja" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>好きな言語にLSPを</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">自分の言語にLSPを</a></li><li class="chapter-item expanded affix "><a href="introduction.html">はじめに</a></li><li class="chapter-item expanded "><a href="lang/index.html"><strong aria-hidden="true">1.</strong> 自作言語</a></li><li class="chapter-item expanded affix "><li class="part-title">サーバー</li><li class="chapter-item expanded "><a href="server/parser/index.html"><strong aria-hidden="true">2.</strong> Error-toleant Parser</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="server/parser/lexer.html"><strong aria-hidden="true">2.1.</strong> 字句解析</a></li><li class="chapter-item expanded "><a href="server/parser/parser.html"><strong aria-hidden="true">2.2.</strong> 構文解析</a></li></ol></li><li class="chapter-item expanded "><a href="server/index.html"><strong aria-hidden="true">3.</strong> サーバーを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> LSPの実装</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">クライアント</li><li class="chapter-item expanded "><a href="client/index.html"><strong aria-hidden="true">4.</strong> クライアントを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="client/vscode.html"><strong aria-hidden="true">4.1.</strong> Visual Studio Code</a></li><li class="chapter-item expanded "><a href="client/vim.html"><strong aria-hidden="true">4.2.</strong> Vim</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">好きな言語にLSPを</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="自分の言語にlspを"><a class="header" href="#自分の言語にlspを">自分の言語にLSPを</a></h1>
+<p>本書では、自作言語にLanguage Server Protocol (LSP) を実装するためのチュートリアルです。</p>
+<p>最初に、LSPの概要を説明し、次に、簡単な言語を設計し、その言語に対するLSPを実装します。</p>
+<p>本書を読むことで、LSPの仕組みを理解し、自作言語にLSPを実装する方法を学ぶことができます。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="はじめに"><a class="header" href="#はじめに">はじめに</a></h1>
+<p>LSPは、エディタと言語サーバーの間で通信を行うためのプロトコルである。
+エディタは、ユーザーが入力したコードを解析し、言語サーバーに対して解析結果を要求する。
+言語サーバーは、解析結果を受け取り、エディタに対して返す。エディタは、受け取った解析結果を元に、ユーザーに対してフィードバックを行う。</p>
+<h2 id="なぜlspが必要か"><a class="header" href="#なぜlspが必要か">なぜLSPが必要か</a></h2>
+<p>LSPの登場以前は、各エディタに各言語について言語機能を実装する必要があった。
+つまり、M個のエディタとN個の言語に対して、$M\times N$回実装が必要だった。
+LSPは、エディタに必要な言語機能を抽象化することで、統一されたインターフェースのセットを提供する。
+そのため、同じ言語機能を提供するのに必要な実装は$M+N$個で済む。</p>
+<h2 id="lspに必要なもの"><a class="header" href="#lspに必要なもの">LSPに必要なもの</a></h2>
+<p>ある言語のLSPを実装するためには、以下のものが必要である。</p>
+<ul>
+<li><strong>言語サーバー</strong>: 解析結果を返すサーバー
+<ul>
+<li><strong>パーサー</strong>: ソースコードを解析する</li>
+<li><strong>分析器</strong>: 解析された情報を元に、エディタに対して返す情報を生成する</li>
+</ul>
+</li>
+<li><strong>エディタ側のLSPクライアント</strong>: 言語サーバーと通信するクライアント</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="自作言語"><a class="header" href="#自作言語">自作言語</a></h1>
+<p>例として、簡単なプログラミング言語を作成しましょう。</p>
+<h2 id="データ型"><a class="header" href="#データ型">データ型</a></h2>
+<ul>
+<li>int</li>
+<li>float</li>
+<li>string</li>
+<li>bool</li>
+</ul>
+<h3 id="構造体"><a class="header" href="#構造体">構造体</a></h3>
+<p>構造体は以下のように定義します。</p>
+<pre><code class="language-ts">struct Point {
+    x: int;
+    y: int;
+}
+</code></pre>
+<h2 id="シンタックス"><a class="header" href="#シンタックス">シンタックス</a></h2>
+<h3 id="変数の定義"><a class="header" href="#変数の定義">変数の定義</a></h3>
+<p>変数の定義は以下のように行います。
+型は自動で推論されるので、省略することができます。
+再定義はできません。</p>
+<pre><code class="language-ts">let x: string = "hello" + 1;
+let y = 2.0;
+</code></pre>
+<h3 id="式"><a class="header" href="#式">式</a></h3>
+<h4 id="リテラル"><a class="header" href="#リテラル">リテラル</a></h4>
+<ul>
+<li>int: <code>1</code>, <code>2</code>, <code>3</code></li>
+<li>float: <code>1.0</code>, <code>2.0</code>, <code>3.0</code></li>
+<li>string: <code>"hello"</code>, <code>"world"</code></li>
+<li>bool: <code>true</code>, <code>false</code></li>
+</ul>
+<h4 id="二項演算子"><a class="header" href="#二項演算子">二項演算子</a></h4>
+<ul>
+<li><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code></li>
+<li><code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></li>
+</ul>
+<h3 id="制御構文"><a class="header" href="#制御構文">制御構文</a></h3>
+<h4 id="if"><a class="header" href="#if">if</a></h4>
+<pre><code class="language-ts">if (a == b) {
+    print("a is equal to b");
+} else {
+    print("a is not equal to b");
+}
+</code></pre>
+<h4 id="while"><a class="header" href="#while">while</a></h4>
+<pre><code class="language-ts">while (a &lt; 10) {
+    a = a + 1;
+}
+</code></pre>
+<h3 id="関数"><a class="header" href="#関数">関数</a></h3>
+<pre><code class="language-cpp">func add(a: int, b: int): int {
+    return a + b;
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="error-toleant-parser"><a class="header" href="#error-toleant-parser">Error-toleant Parser</a></h1>
+<p>Language serverには、Error-toleant Parserが必要です。
+Error-toleant Parserは、エラーを検出してもパースを続行することで、
+すべてのエラーを報告することができて、エラーの位置情報を正確に取得できます。</p>
+<h2 id="error-toleant-parserを実装するには"><a class="header" href="#error-toleant-parserを実装するには">Error-toleant Parserを実装するには</a></h2>
+<p>パーサーが生成する構文ツリーは、2つの重要な属性を保証する：</p>
+<ol>
+<li>
+<p>すべてのソース情報が完全に忠実に保持される。つまり、ツリーにはソース・テキストに含まれるすべての情報、すべての文法構文、すべての字句トークン、そして空白やコメントを含むその他すべての情報が含まれています。シンタックス・ツリーはまた、プログラムが不完全または不正である場合に、シンタックス・ツリー内のトークンのスキップや欠落を表現することで、ソースコードのエラーを表します。</p>
+</li>
+<li>
+<p>パーサーから得られたシンタックス・ツリーは、パースされたテキストに完全にラウンドトリップすることができます。どの構文ノードからでも、そのノードをルートとするサブツリーのテキスト表現を得ることができる。つまり、構文木はソース・テキストを構築・編集する方法として使用できる。</p>
+</li>
+</ol>
+<p>生成されるシンタックスツリーは文字通りツリーデータ構造で、非終端構造要素が他の要素を親にする。各シンタックス・ツリーはノード（非終端要素）とトークン（終端要素）で構成されます。</p>
+<p>さらに、各ノードとトークンには、位置情報、エラー、コメント＋空白のトリビアが関連付けられている。</p>
+<p>すべてのツリーは、不変量のセットを保証します。つまり、どのような入力であっても常に真を保つツリーの特性です。この不変量のセットは、ツリーが "構造的に健全 "であることを保証し、理解を深めていく際にツリーについて自信を持って推論することを容易にする、一貫した基盤を提供する。例えば、元のテキスト（空白やコメントを含む）は常にノードから再現可能でなければならない。完全なリストは「不変性」を参照。</p>
+<h3 id="nodes"><a class="header" href="#nodes">Nodes</a></h3>
+<h3 id="tokens"><a class="header" href="#tokens">Tokens</a></h3>
+<h3 id="空白とコメント"><a class="header" href="#空白とコメント">空白とコメント</a></h3>
+<h3 id="位置情報"><a class="header" href="#位置情報">位置情報</a></h3>
+<h3 id="エラー処理"><a class="header" href="#エラー処理">エラー処理</a></h3>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lexer"><a class="header" href="#lexer">Lexer</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="parser"><a class="header" href="#parser">Parser</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="language-server"><a class="header" href="#language-server">Language Server</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="language-client"><a class="header" href="#language-client">Language Client</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="visual-studio-code"><a class="header" href="#visual-studio-code">Visual Studio Code</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="vim"><a class="header" href="#vim">Vim</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
