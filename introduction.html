@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">自分の言語にLSPを</a></li><li class="chapter-item expanded affix "><a href="introduction.html" class="active">はじめに</a></li><li class="chapter-item expanded "><a href="lang/index.html"><strong aria-hidden="true">1.</strong> 自作言語</a></li><li class="chapter-item expanded affix "><li class="part-title">サーバー</li><li class="chapter-item expanded "><a href="server/parser/index.html"><strong aria-hidden="true">2.</strong> Error-toleant Parser</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="server/parser/lexer.html"><strong aria-hidden="true">2.1.</strong> 字句解析</a></li><li class="chapter-item expanded "><a href="server/parser/parser.html"><strong aria-hidden="true">2.2.</strong> 構文解析</a></li></ol></li><li class="chapter-item expanded "><a href="server/index.html"><strong aria-hidden="true">3.</strong> サーバーを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> LSPの実装</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">クライアント</li><li class="chapter-item expanded "><a href="client/index.html"><strong aria-hidden="true">4.</strong> クライアントを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="client/vscode.html"><strong aria-hidden="true">4.1.</strong> Visual Studio Code</a></li><li class="chapter-item expanded "><a href="client/vim.html"><strong aria-hidden="true">4.2.</strong> Vim</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="index.html">自分の言語に LSP を</a></li><li class="chapter-item expanded affix "><a href="introduction.html" class="active">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">自作言語</li><li class="chapter-item expanded "><a href="lang/index.html"><strong aria-hidden="true">1.</strong> 概要</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="lang/type.html"><strong aria-hidden="true">1.1.</strong> 型</a></li><li class="chapter-item expanded "><a href="lang/syntax.html"><strong aria-hidden="true">1.2.</strong> シンタックス</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.3.</strong> セマンティクス</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">サーバー</li><li class="chapter-item expanded "><a href="server/parser/index.html"><strong aria-hidden="true">2.</strong> Error-tolerant Parser</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="server/parser/token.html"><strong aria-hidden="true">2.1.</strong> トークン</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> 字句解析</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.3.</strong> 構文解析</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> サーバーを実装</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> LSP の実装</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">クライアント</li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> クライアントを実装</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> Visual Studio Code</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Vim</div></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -174,25 +174,27 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="はじめに"><a class="header" href="#はじめに">はじめに</a></h1>
-<p>LSPは、エディタと言語サーバーの間で通信を行うためのプロトコルである。
-エディタは、ユーザーが入力したコードを解析し、言語サーバーに対して解析結果を要求する。
-言語サーバーは、解析結果を受け取り、エディタに対して返す。エディタは、受け取った解析結果を元に、ユーザーに対してフィードバックを行う。</p>
-<h2 id="なぜlspが必要か"><a class="header" href="#なぜlspが必要か">なぜLSPが必要か</a></h2>
-<p>LSPの登場以前は、各エディタに各言語について言語機能を実装する必要があった。
-つまり、M個のエディタとN個の言語に対して、$M\times N$回実装が必要だった。
-LSPは、エディタに必要な言語機能を抽象化することで、統一されたインターフェースのセットを提供する。
-そのため、同じ言語機能を提供するのに必要な実装は$M+N$個で済む。</p>
-<h2 id="lspに必要なもの"><a class="header" href="#lspに必要なもの">LSPに必要なもの</a></h2>
-<p>ある言語のLSPを実装するためには、以下のものが必要である。</p>
+<p>LSP は、エディタと言語サーバーの間で通信を行うためのプロトコルです。
+エディタは、ユーザーが入力したコードを解析し、言語サーバーに対して解析結果を要求します。
+言語サーバーは、解析結果を受け取り、エディタに対して返します。エディタは、受け取った解析結果を元に、ユーザーに対してフィードバックを行います。</p>
+<h2 id="なぜ-lsp-が必要か"><a class="header" href="#なぜ-lsp-が必要か">なぜ LSP が必要か</a></h2>
+<p>LSP の登場以前は、各エディタに各言語について言語機能を実装する必要がありました。
+つまり、<code>m</code>個のエディタと<code>n</code>個の言語に対して、<code>m*n</code> 回実装が必要でした。
+LSP は、エディタに必要な言語機能を抽象化することで、統一されたインターフェースのセットを提供します。
+そのため、同じ言語機能を提供するのに必要な実装は <code>m+n</code>個で済みます。</p>
+<h2 id="lsp-に必要なもの"><a class="header" href="#lsp-に必要なもの">LSP に必要なもの</a></h2>
+<p>ある言語の LSP を実装するためには、以下のものが必要です。</p>
 <ul>
 <li><strong>言語サーバー</strong>: 解析結果を返すサーバー
 <ul>
-<li><strong>パーサー</strong>: ソースコードを解析する</li>
-<li><strong>分析器</strong>: 解析された情報を元に、エディタに対して返す情報を生成する</li>
+<li><strong>パーサー</strong>: ソースコードを解析します。</li>
+<li><strong>分析器</strong>: 解析された情報を元に、エディタに対して返す情報を生成します。</li>
 </ul>
 </li>
-<li><strong>エディタ側のLSPクライアント</strong>: 言語サーバーと通信するクライアント</li>
+<li><strong>エディタ側の LSP クライアント</strong>: 言語サーバーと通信するクライアント</li>
 </ul>
+<p>本書は、LSP の実装に必要な言語サーバーとエディタ側の LSP クライアントの実装方法について解説していきます。
+バックエンドは、TypeScript で実装し、フロントエンドは、Visual Studio Code と Vim に対応します。</p>
 
                     </main>
 

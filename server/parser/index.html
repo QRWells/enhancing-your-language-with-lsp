@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Error-toleant Parser - 好きな言語にLSPを</title>
+        <title>Error-tolerant Parser - 好きな言語にLSPを</title>
 
 
         <!-- Custom HTML head -->
@@ -88,7 +88,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">自分の言語にLSPを</a></li><li class="chapter-item expanded affix "><a href="../../introduction.html">はじめに</a></li><li class="chapter-item expanded "><a href="../../lang/index.html"><strong aria-hidden="true">1.</strong> 自作言語</a></li><li class="chapter-item expanded affix "><li class="part-title">サーバー</li><li class="chapter-item expanded "><a href="../../server/parser/index.html" class="active"><strong aria-hidden="true">2.</strong> Error-toleant Parser</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../server/parser/lexer.html"><strong aria-hidden="true">2.1.</strong> 字句解析</a></li><li class="chapter-item expanded "><a href="../../server/parser/parser.html"><strong aria-hidden="true">2.2.</strong> 構文解析</a></li></ol></li><li class="chapter-item expanded "><a href="../../server/index.html"><strong aria-hidden="true">3.</strong> サーバーを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> LSPの実装</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">クライアント</li><li class="chapter-item expanded "><a href="../../client/index.html"><strong aria-hidden="true">4.</strong> クライアントを実装</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../client/vscode.html"><strong aria-hidden="true">4.1.</strong> Visual Studio Code</a></li><li class="chapter-item expanded "><a href="../../client/vim.html"><strong aria-hidden="true">4.2.</strong> Vim</a></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../../index.html">自分の言語に LSP を</a></li><li class="chapter-item expanded affix "><a href="../../introduction.html">はじめに</a></li><li class="chapter-item expanded affix "><li class="part-title">自作言語</li><li class="chapter-item expanded "><a href="../../lang/index.html"><strong aria-hidden="true">1.</strong> 概要</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../lang/type.html"><strong aria-hidden="true">1.1.</strong> 型</a></li><li class="chapter-item expanded "><a href="../../lang/syntax.html"><strong aria-hidden="true">1.2.</strong> シンタックス</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">1.3.</strong> セマンティクス</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">サーバー</li><li class="chapter-item expanded "><a href="../../server/parser/index.html" class="active"><strong aria-hidden="true">2.</strong> Error-tolerant Parser</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../../server/parser/token.html"><strong aria-hidden="true">2.1.</strong> トークン</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.2.</strong> 字句解析</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">2.3.</strong> 構文解析</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> サーバーを実装</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> LSP の実装</div></li></ol></li><li class="chapter-item expanded "><li class="part-title">クライアント</li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> クライアントを実装</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> Visual Studio Code</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Vim</div></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -173,38 +173,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="error-toleant-parser"><a class="header" href="#error-toleant-parser">Error-toleant Parser</a></h1>
-<p>Language serverには、Error-toleant Parserが必要です。
-Error-toleant Parserは、エラーを検出してもパースを続行することで、
+                        <h1 id="error-tolreant-parser"><a class="header" href="#error-tolreant-parser">Error-tolreant Parser</a></h1>
+<p>Language server には、Error-tolerant Parser が必要です。
+Error-tolerant Parser は、エラーを検出してもパースを続行することで、
 すべてのエラーを報告することができて、エラーの位置情報を正確に取得できます。</p>
-<h2 id="error-toleant-parserを実装するには"><a class="header" href="#error-toleant-parserを実装するには">Error-toleant Parserを実装するには</a></h2>
-<p>パーサーが生成する構文ツリーは、2つの重要な属性を保証する：</p>
+<h2 id="error-tolerant-parser-を実装するには"><a class="header" href="#error-tolerant-parser-を実装するには">Error-tolerant Parser を実装するには</a></h2>
+<p>パーサーが生成する構文木は、2 つの重要な属性を保証します：</p>
 <ol>
-<li>
-<p>すべてのソース情報が完全に忠実に保持される。つまり、ツリーにはソース・テキストに含まれるすべての情報、すべての文法構文、すべての字句トークン、そして空白やコメントを含むその他すべての情報が含まれています。シンタックス・ツリーはまた、プログラムが不完全または不正である場合に、シンタックス・ツリー内のトークンのスキップや欠落を表現することで、ソースコードのエラーを表します。</p>
-</li>
-<li>
-<p>パーサーから得られたシンタックス・ツリーは、パースされたテキストに完全にラウンドトリップすることができます。どの構文ノードからでも、そのノードをルートとするサブツリーのテキスト表現を得ることができる。つまり、構文木はソース・テキストを構築・編集する方法として使用できる。</p>
-</li>
+<li>すべてのソース情報が完全に忠実に保持されます。つまり、木にはソースに含まれるすべての情報、すべての文法構文、すべての字句トークン、そして空白やコメントを含むその他すべての情報が含まれています。また、プログラムが不完全または不正である場合に、構文木内のトークンのスキップや欠落を表現することで、ソースコードのエラーを表します。</li>
+<li>パーサーから得られた構文木は、パースされたテキストに完全に対応することができます。どの構文ノードからでも、そのノードをルートとする部分木のテキスト表現を得ることができます。つまり、構文木はソースを構築・編集する方法として使用できます。</li>
 </ol>
-<p>生成されるシンタックスツリーは文字通りツリーデータ構造で、非終端構造要素が他の要素を親にする。各シンタックス・ツリーはノード（非終端要素）とトークン（終端要素）で構成されます。</p>
-<p>さらに、各ノードとトークンには、位置情報、エラー、コメント＋空白のトリビアが関連付けられている。</p>
-<p>すべてのツリーは、不変量のセットを保証します。つまり、どのような入力であっても常に真を保つツリーの特性です。この不変量のセットは、ツリーが "構造的に健全 "であることを保証し、理解を深めていく際にツリーについて自信を持って推論することを容易にする、一貫した基盤を提供する。例えば、元のテキスト（空白やコメントを含む）は常にノードから再現可能でなければならない。完全なリストは「不変性」を参照。</p>
-<h3 id="nodes"><a class="header" href="#nodes">Nodes</a></h3>
-<h3 id="tokens"><a class="header" href="#tokens">Tokens</a></h3>
+<p>生成された構文木は文字通り木データ構造で、非終端構造要素が他の要素を親にします。各文法技術はノード（非終端要素）とトークン（終端要素）で構成されます。</p>
+<p>さらに、各ノードとトークンには、位置情報、エラー、コメント＋空白のトリビアが関連付けられています。</p>
+<p>すべての木は、不変量のセットを保証します。つまり、どのような入力であっても常に真を保つ木の特性です。
+この不変量のセットは、木が "構造的に健全 "であることを保証し、理解を深めていく際に木について自信を持って推論することを容易にし、一貫した基盤を提供します。
+例えば、元のテキスト（空白やコメントを含む）は常にノードから再現可能でなければなりません。完全なリストは「不変性」を参照してください。</p>
+<h3 id="ノード"><a class="header" href="#ノード">ノード</a></h3>
+<p>ノードは構文木の主要な構成要素です。ノードは、宣言、式、ステートメント、式などの構文を表します。各種類のノードは、<code>Node</code>から派生したクラスで表されます。</p>
+<h2 id="トークン"><a class="header" href="#トークン">トークン</a></h2>
+<p>構文トークンは言語文法の終端記号で、コードの最小構文フラグメントを表す。他のノードやトークンの親になることはありません。
+構文トークンは、キーワード、識別子、リテラル、および句読点で構成されます。</p>
+<p>効率のため、構文ノードとは異なり、<code>Token</code>クラスは一つしかありません。トークンの種類によって意味を持つプロパティが混在する可能性があります。</p>
 <h3 id="空白とコメント"><a class="header" href="#空白とコメント">空白とコメント</a></h3>
+<p>空白とコメントトリビアは通常の言語構文の一部ではなく、2 つのトークンの間のどこにでも出現するため、構文木には子ノードとして含まれません。
+しかし、これらはリファクタリングのような機能を実装するときや、ソースとの完全な忠実性を維持するために重要であるため、構文木の一部として存在します。</p>
+<p>トークンの<code>LeadingWhitespaceAndComments</code>を検査することで、トリビアにアクセスできます。ソースが解析されると、トリビアのシーケンスがトークンに関連付けられます。</p>
 <h3 id="位置情報"><a class="header" href="#位置情報">位置情報</a></h3>
+<p>各ノード、トークン、またはトリビアは、ソース内での位置と、それが構成する文字数を持っています。
+テキストの位置は 32 ビットの整数で表され、これは文字列へのゼロベースのバイトインデックスであります。幅は文字数に対応し、整数で表されます。長さゼロは 2 文字の間の位置を指します。</p>
+<p>効率化のため、位置はテキスト内の絶対位置を指し、行／列情報が必要な場合はヘルパー関数が利用できます。</p>
 <h3 id="エラー処理"><a class="header" href="#エラー処理">エラー処理</a></h3>
+<p>ソースに構文エラーがあっても、ソースに対して対応できる完全な構文木が生成されます。
+パーサーは、定義された構文に準拠していないコードに遭遇しますと、2 つのテクニックのいずれかを使用して構文木を作成します。</p>
+<ol>
+<li>パーサーが特定の種類のトークンを予期していたにもかかわらず、それが見つからなかった場合、そのトークンが予期されていた場所に<code>MissingToken</code>を構文木に挿入することがあります。<code>MissingToken</code>は、期待された実際のトークンを表すが、<code>Span</code>は空です。</li>
+<li>パーサーは構文解析を続行できるトークンが見つかるまで、トークンをスキップすることがあります。この場合、スキップされたトークンは、構文木内の<code>SkippedToken</code>として付加されます。</li>
+</ol>
+<p>パーサーは寛容な方法で構文木を生成し、すべての不正確な構文（例えば、メソッドパラメータのデフォルト値として非定数式を含む）に対してエラーを生成するわけではないことに注意してください。
+その代わりに、パース後の構文木の walk でこれらのエラーをつけます。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../lang/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../lang/syntax.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../server/parser/lexer.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../server/parser/token.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -214,11 +230,11 @@ Error-toleant Parserは、エラーを検出してもパースを続行するこ
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../lang/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../lang/syntax.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../server/parser/lexer.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../server/parser/token.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
