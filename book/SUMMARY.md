@@ -1,21 +1,26 @@
 # Summary
 
-[自分の言語にLSPを](README.md)
+[自分の言語に LSP を](README.md)
 [はじめに](introduction.md)
 
+# 自作言語
 
-- [自作言語](lang/README.md)
+- [概要](lang/README.md)
+  - [型](lang/type.md)
+  - [シンタックス](lang/syntax.md)
+  - [セマンティクス]()
 
 # サーバー
 
-- [Error-toleant Parser](server/parser/README.md)
-    - [字句解析](server/parser/lexer.md)
-    - [構文解析](server/parser/parser.md)
-- [サーバーを実装](server/README.md)
-    - [LSPの実装]()
+- [Error-tolerant Parser](server/parser/README.md)
+  - [トークン](server/parser/token.md)
+  - [字句解析]()
+  - [構文解析]()
+- [サーバーを実装]()
+  - [LSP の実装]()
 
 # クライアント
 
-- [クライアントを実装](client/README.md)
-    - [Visual Studio Code](client/vscode.md)
-    - [Vim](client/vim.md)
+- [クライアントを実装]()
+  - [Visual Studio Code]()
+  - [Vim]()
