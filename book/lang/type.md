@@ -2,6 +2,8 @@
 
 ## 基本データ型
 
+- `never`
+- `unit`
 - `int`
 - `float`
 - `string`

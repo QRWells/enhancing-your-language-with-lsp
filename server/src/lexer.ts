@@ -1,10 +1,16 @@
-# 字句解析
+import {
+  CharCode,
+  isDecimalDigit,
+  isHexDigit,
+  isNewLine,
+  isWhiteSpace,
+} from "./charCodes";
+import type { Document } from "./document";
+import { Token } from "./token";
+import { TokenKind } from "./tokenKind";
+import { KEYWORDS, OPERATORS_AND_PUNCTUATORS, RESERVED_WORDS } from "./tokenStringMap";
 
-このチュートリアルでは、簡単のため、字句解析は文字を1つずつ読み取り、その文字に基づいてトークンをスキャンすることで実装されている。
-
-### コード
-```ts
-class Lexer {
+export class Lexer {
   private pos = 0;
   private length: number;
 
@@ -391,4 +397,3 @@ class Lexer {
     return this.doc.charCodeAt(this.pos + index) === ch;
   }
 }
-```

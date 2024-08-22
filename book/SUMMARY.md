@@ -8,13 +8,12 @@
 - [概要](lang/README.md)
   - [型](lang/type.md)
   - [シンタックス](lang/syntax.md)
-  - [セマンティクス]()
 
 # サーバー
 
-- [Error-tolerant Parser](server/parser/README.md)
+- [パーサ](server/parser/README.md)
   - [トークン](server/parser/token.md)
-  - [字句解析]()
+  - [字句解析](server/parser/lexer.md)
   - [構文解析]()
 - [サーバーを実装]()
   - [LSP の実装]()
